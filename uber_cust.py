@@ -11,11 +11,17 @@
 # -----------------------------------------------------------------------------*/
 # Reference data is located on the test-bmohb console gs://newccdatav3
 
-from random import randrange, random, shuffle
+import csv
+import random
+import re
+from data import NAICS
+from data import zips
 from datetime import datetime
-from faker import Faker
+from random import randrange
+from data import geo_data
+
 from barnum import gen_data
-import csv, NAICS, random, geo_data, zips, re
+from faker import Faker
 
 # Dictionary for client whose net worth is over $500K
 HighNetWorth = ['Yes', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No', 'No',
@@ -397,7 +403,7 @@ with open('uber_cust.csv', 'w') as f1:
     # Writer for CSV...Pipe delimited...Return for a new line
     writer = csv.writer(f1, delimiter='|', lineterminator='\n', )
     # Header Row
-    writer.writerow(['ROWNUM'] + ['ACCOUNTID'] + ['ACCT_TYPE'] + ['NUM_CCS'] + ['NAME'] + ['M_NAME'] + ['SSN'] + [
+    writer.writerow(['ROWNUM'] + ['accountNumber'] +['accountCategory'] + ['accountType'] + ['NUM_CCS'] + ['NAME'] + ['M_NAME'] + ['SSN'] + [
         'AUTHORIZED_NAME2'] + ['M_NAME2'] + ['SSN2'] + \
                     ['AUTHORIZED_NAME3'] + ['M_NAME3'] + ['SSN3'] + ['AUTHORIZED_NAME4'] + ['M_NAME4'] + ['SSN4'] + [
                         'CREDITCARDNUMBER'] + ['CREDITCARDTYPE'] + ['EMPLOYER'] + ['CUSTEMAIL'] + \
@@ -505,7 +511,7 @@ with open('uber_cust.csv', 'w') as f1:
             ssn.insert(No_CCs + k, '')
             mdl.insert(No_CCs, '')
         # Sets CC_NO to a random credit card number
-        CC_NO = gen_data.cc_number()
+        CC_NO = gen_data.create_cc_number()
 
         # Extract CC_Number from the tuple returned by CC_Number...Tuple contains CC Number and Type
         # while CC_list.count(CC_NO[1][0]) > 0:

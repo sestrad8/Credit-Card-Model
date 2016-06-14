@@ -5,7 +5,6 @@ A repo for the creation of credit card data and a model to detect suspicious act
 
     sudo pip install inenv
     inenv init Credit-Card-Model
-    pip install -r requirements.txt
     
 
 
