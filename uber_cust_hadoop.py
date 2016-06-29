@@ -42,7 +42,7 @@ Official_Lang = ['English', 'English', 'English', 'French']
 # Dictionary for method of communication
 Preffered_Channel = ['Direct Mail', 'Telemarketing', 'Email', 'SMS']
 # Dictionary for status of customer
-# Customer_Status = ['Prospect','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Inactive Customer','Past Customer']
+customer_status = ['Prospect','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Active Customer','Inactive Customer','Past Customer']
 # Dictionary for LOB Segment Type
 Seg_Model_Type = ['LOB Specific', 'Profitability', 'Geographical', 'Behavioral', 'Risk Tolerance']
 # Dictionary for Model ID
@@ -233,7 +233,7 @@ NonRegulated_Financial_Institution = Embassy_Consulate
 Not_Profit = Embassy_Consulate
 # Dictionary for random occupation
 Occupation = ['11-1011 Chief Executives', \
-              '11-3011 Administrative Services Managers', \
+              '11-3011 Administrative services Managers', \
               '11-3031 Financial Managers', \
               '11-3061 Purchasing Managers', \
               '13-1011 Agents and Business Managers of Artists, Performers, and Athletes', \
@@ -272,7 +272,7 @@ Products = ['Certificate of Deposit', \
             'Credit Card', \
             'Custodial and Investment Agency - Institutional', \
             'Custodial and Investment Agency - Personal', \
-            'Custodial/Trust Outsourcing Services (BTOS)', \
+            'Custodial/Trust Outsourcing services (BTOS)', \
             'Custody Accounts (PTIM)', \
             'Custody Accounts (RSTC)', \
             'DTF (BHFA)', \
@@ -285,11 +285,11 @@ Products = ['Certificate of Deposit', \
             'Loan / Letter of Credit', \
             'Money Market', \
             'Mortgage / Bond / Debentures', \
-            'Nondeposit Investment Products', 'Nondeposit Investment Products', 'Nondeposit Investment Products',
-            'Nondeposit Investment Products', 'Nondeposit Investment Products', 'Nondeposit Investment Products',
-            'Nondeposit Investment Products', 'Nondeposit Investment Products', 'Nondeposit Investment Products',
-            'Nondeposit Investment Products', 'Nondeposit Investment Products', 'Nondeposit Investment Products',
-            'Nondeposit Investment Products', 'Nondeposit Investment Products', \
+            'Nondeposit Investment products', 'Nondeposit Investment products', 'Nondeposit Investment products',
+            'Nondeposit Investment products', 'Nondeposit Investment products', 'Nondeposit Investment products',
+            'Nondeposit Investment products', 'Nondeposit Investment products', 'Nondeposit Investment products',
+            'Nondeposit Investment products', 'Nondeposit Investment products', 'Nondeposit Investment products',
+            'Nondeposit Investment products', 'Nondeposit Investment products', \
             'None', \
             'Savings Account', \
             'Trust Administration - Irrevocable and Revocable (PTIM)', \
@@ -297,16 +297,16 @@ Products = ['Certificate of Deposit', \
             ]
 # Sets variable to Embassy flag
 Sales_Used_Vehicles = Embassy_Consulate
-# Dictionary for random Services
-Services = ['Benefit Payment Services', \
+# Dictionary for random services
+Services = ['Benefit Payment services', \
             'Domestic Wires and Direct Deposit / ACH', \
-            'Family Office Services (FOS)', \
-            'Fiduciary Services', \
+            'Family Office services (FOS)', \
+            'Fiduciary services', \
             'Financial Planning', 'Financial Planning', 'Financial Planning', 'Financial Planning',
             'Financial Planning', 'Financial Planning', \
             'International Wires and IAT', \
-            'Investment Advisory Services (IAS)', \
-            'Investment Services', \
+            'Investment Advisory services (IAS)', \
+            'Investment services', \
             'None', \
             'Online / Mobile Banking', \
             'Payroll', \
@@ -315,11 +315,11 @@ Services = ['Benefit Payment Services', \
             'Retirement Plans', 'Retirement Plans', 'Retirement Plans', 'Retirement Plans', 'Retirement Plans',
             'Retirement Plans', 'Retirement Plans', 'Retirement Plans', 'Retirement Plans', \
             'Short Term Cash Management', \
-            'Trust Services', \
-            'Trustee Services', \
-            'Vault Cash Services', \
+            'Trust services', \
+            'Trustee services', \
+            'Vault Cash services', \
             ]
-# Dictionary for random SIC_Code
+# Dictionary for random sic_code
 SIC_Code = ['6021 National Commercial Banks', \
             '6211 Security Brokers Dealers and Flotation Companies', \
             '6282 Investment Advice', \
@@ -331,7 +331,7 @@ SIC_Code = ['6021 National Commercial Banks', \
             '6722 Management Investment Offices Open-End', '6722 Management Investment Offices Open-End',
             '6722 Management Investment Offices Open-End', '6722 Management Investment Offices Open-End', \
             '6733 Trusts Except Educational Religious and Charitable', \
-            '8999 Services NEC', \
+            '8999 services NEC', \
             ]
 # Dictionary for random Market Listing
 Stock_Market_Listing = ['Australian Stock Exchange', \
@@ -482,7 +482,7 @@ with open('uber_cust.csv', 'w') as f1:
         acct_list.extend([acct])
         # Creates a new row and adds data elements
         ##      JS - Main Account Holder SSN as current index in master SSN list
-        ##		row = [i]+[acct]+[random.choice(Acct_Type)]+[No_CCs]+[name]+[tmp[0]]+[(str(randrange(101,1000,1))+str(randrange(10,100,1))+str(randrange(1000,10000,1)))]
+        ##		row = [i]+[acct]+[random.choice(acct_type)]+[No_CCs]+[name]+[tmp[0]]+[(str(randrange(101,1000,1))+str(randrange(10,100,1))+str(randrange(1000,10000,1)))]
         row = [i] + [acct] + [random.choice(Acct_Type)] + [No_CCs] + [name] + [tmp[0]] + [liSSNMaster[i]]
         # Dictionary for names list set to blank
         names = []
@@ -513,7 +513,7 @@ with open('uber_cust.csv', 'w') as f1:
         CC_NO = gen_data.create_cc_number()
 
         # Extract CC_Number from the tuple returned by CC_Number...Tuple contains CC Number and Type
-        # while CC_list.count(CC_NO[1][0]) > 0:
+        # while credit_cards.count(CC_NO[1][0]) > 0:
         CC_TRANS = CC_NO[1][0]
 
         dt = str(datetime.now())
@@ -651,7 +651,7 @@ with open('uber_cust.csv', 'w') as f1:
         hr12 = random.choice(NAICS.NAICS_Code)
         hr13 = random.choice(NonRegulated_Financial_Institution)
         hr14 = random.choice(Not_Profit)
-        # hr15=random.choice(Occupation)
+        # hr15=random.choice(occupation)
         hr16 = random.choice(Privately_ATM_Operator)
         hr17 = random.choice(Products)
         hr18 = random.choice(Sales_Used_Vehicles)

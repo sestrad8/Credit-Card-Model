@@ -2,3 +2,4 @@
 .idea/
 .inenv/
 *.pyc
+*.iml

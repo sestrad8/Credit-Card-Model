@@ -54,7 +54,7 @@ def create_customers(n):
     # List for method of communication
     Preffered_Channel = ['Direct Mail', 'Telemarketing', 'Email', 'SMS']
     # List for status of customer
-    # Customer_Status = ['Prospect','Inactive Customer','Past Customer'] + ['Active Customer'] * 56
+    # customer_status = ['Prospect','Inactive Customer','Past Customer'] + ['Active Customer'] * 56
     # List for LOB Segment Type
     Seg_Model_Type = ['LOB Specific', 'Profitability', 'Geographical', 'Behavioral', 'Risk Tolerance']
     # List for Model ID
@@ -110,7 +110,7 @@ def create_customers(n):
     Not_Profit = Embassy_Consulate
     # List for random occupation
     Occupation = ['11-1011 Chief Executives', \
-                  '11-3011 Administrative Services Managers', \
+                  '11-3011 Administrative services Managers', \
                   '11-3031 Financial Managers', \
                   '11-3061 Purchasing Managers', \
                   '13-1011 Agents and Business Managers of Artists Performers and Athletes', \
@@ -149,7 +149,7 @@ def create_customers(n):
                 'Credit Card', \
                 'Custodial and Investment Agency - Institutional', \
                 'Custodial and Investment Agency - Personal', \
-                'Custodial/Trust Outsourcing Services (BTOS)', \
+                'Custodial/Trust Outsourcing services (BTOS)', \
                 'Custody Accounts (PTIM)', \
                 'Custody Accounts (RSTC)', \
                 'DTF (BHFA)', \
@@ -163,32 +163,32 @@ def create_customers(n):
                 'Savings Account', \
                 'Trust Administration - Irrevocable and Revocable (PTIM)', \
                 'Trust Administration - Irrevocable and Revocable Trusts (BDTC)', \
-                ] + ['Nondeposit Investment Products'] * 14 + ['Investment Agency - Institutional'] * 5
+                ] + ['Nondeposit Investment products'] * 14 + ['Investment Agency - Institutional'] * 5
     # Sets variable to Embassy flag
     Sales_Used_Vehicles = Embassy_Consulate
-    # Dictionary for random Services
-    Services = ['Benefit Payment Services', \
+    # Dictionary for random services
+    Services = ['Benefit Payment services', \
                 'Domestic Wires and Direct Deposit / ACH', \
-                'Family Office Services (FOS)', \
-                'Fiduciary Services', \
+                'Family Office services (FOS)', \
+                'Fiduciary services', \
                 'International Wires and IAT', \
-                'Investment Advisory Services (IAS)', \
-                'Investment Services', \
+                'Investment Advisory services (IAS)', \
+                'Investment services', \
                 'None', \
                 'Online / Mobile Banking', \
                 'Payroll', \
                 'Short Term Cash Management', \
-                'Trust Services', \
-                'Trustee Services', \
-                'Vault Cash Services', \
+                'Trust services', \
+                'Trustee services', \
+                'Vault Cash services', \
                 ] + ['Financial Planning'] * 6 + ['Retirement Plans'] * 19
-    # Dictionary for random SIC_Code
+    # Dictionary for random sic_code
     SIC_Code = ['6021 National Commercial Banks', \
                 '6211 Security Brokers Dealers and Flotation Companies', \
                 '6282 Investment Advice', \
                 '6311 Life Insurance', \
                 '6733 Trusts Except Educational Religious and Charitable', \
-                '8999 Services NEC', \
+                '8999 services NEC', \
                 ] + ['6722 Management Investment Offices Open-End'] * 12
     # Dictionary for random Market Listing
     Stock_Market_Listing = ['Australian Stock Exchange', \
@@ -402,7 +402,7 @@ def create_customers(n):
         hr12 = random.choice(NAICS.NAICS_Code)
         hr13 = random.choice(NonRegulated_Financial_Institution)
         hr14 = random.choice(Not_Profit)
-        # hr15=random.choice(Occupation) - added before through gen_data
+        # hr15=random.choice(occupation) - added before through gen_data
         hr16 = random.choice(Privately_ATM_Operator)
         hr17 = random.choice(Products)
         hr18 = random.choice(Sales_Used_Vehicles)
