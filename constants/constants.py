@@ -1,5 +1,3 @@
-import random
-
 WEIGHTED_OPTIONS = {
     'high_net_worth': [('Yes', 1), ('No', 30)],
     'related_type': [('Primary', 1), ('Secondary', 1), ('Joint', 1)],
@@ -81,7 +79,8 @@ WEIGHTED_OPTIONS = {
                              ],
     'low_net': [(0, 4), (1, 1), (2, 1)],
     'acct_type': [('C', 5), ('B', 1)],
-    'number_cc': [(1, 7), (2, 11), (3, 3), (4, 1)]
+    'number_cc': [(1, 7), (2, 11), (3, 3), (4, 1)],
+    'refrating': [(1, 3), (2, 2), (3, 1), (4, 2), (5, 12)]
 
 }
 

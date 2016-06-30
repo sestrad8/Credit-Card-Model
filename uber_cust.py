@@ -15,22 +15,39 @@ import csv
 import random
 from datetime import datetime
 from random import randrange
-
+import os
 import re
 from barnum import gen_data
-from constants.constants import (EXCHANGE_CURRENCY, FOREIGN_FINANCIAL_INSTITUTION, FOREIGN_GOVT,
-                                 FOREIGN_NONBANK_FINANCIAL_INSTITUTION, INTERNET_GAMBLING, MEDICAL_MARIJUANA_DISPENSARY,
-                                 MONEY_SERVICE_BUSINESS,
-                                 NONREGULATED_FINANCIAL_INSTITUTION, NOT_PROFIT, PRIVATE_ATM_OPERATOR,
-                                 SALES_USED_VEHICLES, THIRD_PARTY_PAYMENT_PROCESSOR, TRANSACTING_PROVIDER)
-from constants.constants import (SEG_MODEL_TYPE, MODEL_ID, SEG_MODEL_NAME, SEG_MODEL_SCORE, SEG_MODEL_GROUP,
-                                 SEG_MODEL_DESCRIPTION)
+from constants.constants import EMBASSY_CONSULATE
+
+from constants.constants import EXCHANGE_CURRENCY
+from constants.constants import FOREIGN_FINANCIAL_INSTITUTION
+from constants.constants import FOREIGN_GOVT
+from constants.constants import FOREIGN_NONBANK_FINANCIAL_INSTITUTION
+from constants.constants import INTERNET_GAMBLING
+from constants.constants import MEDICAL_MARIJUANA_DISPENSARY
+from constants.constants import MONEY_SERVICE_BUSINESS
+from constants.constants import NONREGULATED_FINANCIAL_INSTITUTION
+from constants.constants import NOT_PROFIT
+from constants.constants import PRIVATE_ATM_OPERATOR
+from constants.constants import SALES_USED_VEHICLES
+from constants.constants import THIRD_PARTY_PAYMENT_PROCESSOR
+from constants.constants import TRANSACTING_PROVIDER
+
+from constants.constants import SEG_MODEL_TYPE
+from constants.constants import MODEL_ID
+from constants.constants import SEG_MODEL_NAME
+from constants.constants import SEG_MODEL_SCORE
+from constants.constants import SEG_MODEL_DESCRIPTION
+from constants.constants import SEG_MODEL_GROUP
 from constants.constants import USE_CASE
 from data import NAICS
 from data import geo_data
 from data import zips
 from faker import Faker
 from utils.weighted import weighted_options
+
+import settings
 
 # Dictionary for Account list set to blank
 acct_list = []
@@ -45,11 +62,15 @@ fake = Faker()
 
 
 def get_file(fn, mode='w'):
-    pass
+    return open(os.path.join(settings.DATA_DIR, fn), mode=mode)
+
+
+def risk_range():
+    return max((randrange(0, 101, 1) - 99), 0) == 1
 
 
 def generate_customers():
-    with open('uber_cust.csv', 'w') as f1:
+    with get_file('uber_cust.csv', 'w') as f1:
         # Writer for CSV...Pipe delimited...Return for a new line
         writer = csv.writer(f1, delimiter='|', lineterminator='\n', )
         # Header Row
@@ -62,7 +83,8 @@ def generate_customers():
                 'CREDITCARDNUMBER'] + ['CREDITCARDTYPE'] + ['EMPLOYER'] + ['CUSTEMAIL'] + \
             ['OCCUPATION'] + ['CITY'] + ['STATE'] + ['ZIP'] + ['COUNTRY'] + ['PREVIOUS_CITY'] + [
                 'PREVIOUS_STATE'] + \
-            ['PREVIOUS_ZIP'] + ['PREVIOUS_COUNTRY'] + ['DOB'] + ['PEP'] + ['SAR'] + ['CLOSEDACCOUNT'] + [
+            ['PREVIOUS_ZIP'] + ['PREVIOUS_COUNTRY'] + ['DOB'] + ['politically_exposed_person'] + [
+                'suspicious_activity_report'] + ['CLOSEDACCOUNT'] + [
                 'RELATED_ACCT'] + ['RELATED_TYPE'] + ['PARTY_TYPE'] + ['PARTY_RELATION'] + [
                 'PARTY_STARTDATE'] + ['PARTY_ENDDATE'] + \
             ['LARGE_CASH_EXEMPT'] + ['DEMARKET_FLAG'] + ['DEMARKET_DATE'] + ['PROB_DEFAULT_RISKR'] + [
@@ -87,27 +109,17 @@ def generate_customers():
         # Loop for number of accounts to generate
         start = 10
         acct_list = []
-        # JS - Update code 1/26/2016
-        # JS - Create list of SSNs up to 20M and use that to pull from
-        liSSNMaster = []
-        for i in xrange(30):
-            liSSNMaster.append(''.join(str(random.randint(0, 9)) for _ in xrange(9)))
-        # JS - Only create as many records as the SSN list has available
-        # JS - Use xrange instead of range to minimize memory allocation
-        liSSNMaster = list(set(liSSNMaster))
-        if len(liSSNMaster) < 30:
-            liSSNMaster = []
-            for i in xrange(30):
-                liSSNMaster.append(''.join(str(random.randint(0, 9)) for _ in xrange(9)))
-            liSSNMaster = list(set(liSSNMaster))
+
+        li_ssn_master = list(set([''.join(str(random.randint(0, 9)) for _ in xrange(9)) for i in xrange(30)]))
+
+        if len(li_ssn_master) < 30:
+            li_ssn_master = list(set([''.join(str(random.randint(0, 9)) for _ in xrange(9)) for i in xrange(30)]))
         for i in xrange(30):
             # Initiate High Risk Flags
-            # Politically Exposed Person
-            PEP = 'No'
-            # Customer with a Suspicous Activity Report
-            SAR = 'No'
-            # Customer with a closed account
-            Clsd = 'No'
+            politically_exposed_person = 'No'
+            suspicious_activity_report = 'No'
+
+            closed_cust_acct = 'No'
             # High risk customer flag
             high_risk = 'No'
             # High Risk Rating
@@ -117,7 +129,7 @@ def generate_customers():
             dem_date = ''
             # generate closed acct flag
             if max((randrange(0, 98, 1) - 96), 0) == 1:
-                Clsd = 'Yes'
+                closed_cust_acct = 'Yes'
 
             # Random number generator for account number
             # acct = randrange(100000,100000000,1)
@@ -129,7 +141,7 @@ def generate_customers():
             # acct=str(i)++re.sub('\W','',dt)
             acct = start + 1 + randrange(1, 10, 1)
             start = acct
-            # Randomly generates customer name
+
             name = fake.name()
             tmp = gen_data.create_name()
             # Adds account number to account dictionary
@@ -137,7 +149,7 @@ def generate_customers():
             # Creates a new row and adds data elements
             ##      JS - Main Account Holder SSN as current index in master SSN list
             ##		row = [i]+[acct]+[random.choice(acct_type)]+[No_CCs]+[name]+[tmp[0]]+[(str(randrange(101,1000,1))+str(randrange(10,100,1))+str(randrange(1000,10000,1)))]
-            row = [i] + [acct] + [weighted_options('acct_type')] + [no_ccs] + [name] + [tmp[0]] + [liSSNMaster[i]]
+            row = [i] + [acct] + [weighted_options('acct_type')] + [no_ccs] + [name] + [tmp[0]] + [li_ssn_master[i]]
             # Dictionary for names list set to blank
             names = []
             # Dictionary for Social Security Number list set to blank
@@ -151,11 +163,11 @@ def generate_customers():
                 mdl.insert(j, tmp2[0])
                 ##      JS - Pull from SSN Master list
                 # ssn.insert(j,(str(randrange(101,1000,1))+str(randrange(10,100,1))+str(randrange(1000,10000,1))))
-                randInt = randrange(1, len(liSSNMaster), 1)
+                randInt = randrange(1, len(li_ssn_master), 1)
                 if randInt != i:
-                    ssn.insert(j, liSSNMaster[randInt])
+                    ssn.insert(j, li_ssn_master[randInt])
                 else:
-                    ssn.insert(j, liSSNMaster[randInt - 1])
+                    ssn.insert(j, li_ssn_master[randInt - 1])
 
             # Name and SSN is set to blank if less than 4 customers on an account
 
@@ -191,24 +203,25 @@ def generate_customers():
             lrg_cash_ex = weighted_options('yes_no')
 
             # Condition for SARs and Demarketed Clients
-            if Clsd == 'Yes':
-                # 1% of closed accounts are demarketed but never had a SAR filed
-                if max((randrange(0, 101, 1) - 99), 0) == 1 and SAR == 'No':
+            if closed_cust_acct == 'Yes':
+                # 1% of closed accounts are demarketed but never had a suspicious_activity_report filed
+                if risk_range() and suspicious_activity_report == 'No':
                     demarket = 'Yes'
                     dem_date = gen_data.create_date(past=True)
-                if max((randrange(0, 11, 1) - 9), 0) == 1 and demarket == 'No':
+                if risk_range() and demarket == 'No':
                     # 10% of closed accounts have SARs
-                    SAR = 'Yes'
+                    suspicious_activity_report = 'Yes'
                     # 90% of closed accounts with SARs are demarketed
                     if max((randrange(0, 11, 1) - 9), 0) == 0:
                         demarket = 'Yes'
                         dem_date = gen_data.create_date(past=True)
 
-            if max((randrange(0, 101, 1) - 99), 0) == 1:
-                PEP = 'Yes'
+            if risk_range():
+                politically_exposed_person = 'Yes'
 
             row.extend([addr[0], addr[1], zip, 'US', addr2[0], addr2[1], zip2, 'US',
-                        gen_data.create_birthday(min_age=2, max_age=85), PEP, SAR, Clsd])
+                        gen_data.create_birthday(min_age=2, max_age=85), politically_exposed_person,
+                        suspicious_activity_report, closed_cust_acct])
             # Start Generating related accounts from account list once 10,000 accounts are generated
             if i > 10000:
                 rel = int(random.choice(acct_list)) * max((randrange(0, 10001, 1) - 9999), 0)
@@ -225,17 +238,16 @@ def generate_customers():
             # Randomly generates account start date
             party_start = gen_data.create_date(past=True)
             # Randomly selects consent option for sharing info
-            Consent_Share = weighted_options('yes_no')
+            consent_share = weighted_options('yes_no')
 
             # Add additional data elements to current csv row
-
 
             row.extend(
                 [weighted_options('party_type'), weighted_options('party_relation'), party_start,
                  gen_data.create_date(past=True),
                  lrg_cash_ex, demarket, dem_date, randrange(0, 100, 1), weighted_options('official_lang')])
             # Add data element preferred methond of contact for yes to share info...if not then blank to current row
-            if Consent_Share == 'Yes':
+            if consent_share == 'Yes':
                 row.extend(['Yes', weighted_options('preferred_channel')])
             else:
                 row.extend(['No', ''])
@@ -282,7 +294,7 @@ def generate_customers():
 
             row.extend([arms_manufacturer, auction, cash_intensive_business, casino_gambling, chan_ob, chan_txn])
 
-            # Randomly select whther customer has a High Net Worth
+            # Randomly select whether customer has a High Net Worth
             high_net_worth_flag = weighted_options('high_net_worth')
 
             # Randomly Generates customer net worth based on the above flag
@@ -302,49 +314,49 @@ def generate_customers():
             hr1 = weighted_options('complex_hi_vehicle')
             hr2 = weighted_options('dealer_precious_metal')
             hr3 = weighted_options('digital_pm_operator')
-            hr4 = weighted_options('embassy_consulate')
-            hr5 = weighted_options('embassy_consulate')
-            hr6 = weighted_options('embassy_consulate')
-            hr7 = weighted_options('embassy_consulate')
-            hr8 = weighted_options('embassy_consulate')
-            hr9 = weighted_options('embassy_consulate')
-            hr10 = weighted_options('embassy_consulate')
-            hr11 = weighted_options('embassy_consulate')
+            hr4 = weighted_options(EMBASSY_CONSULATE)
+            hr5 = weighted_options(EXCHANGE_CURRENCY)
+            hr6 = weighted_options(FOREIGN_FINANCIAL_INSTITUTION)
+            hr7 = weighted_options(FOREIGN_GOVT)
+            hr8 = weighted_options(FOREIGN_NONBANK_FINANCIAL_INSTITUTION)
+            hr9 = weighted_options(INTERNET_GAMBLING)
+            hr10 = weighted_options(MEDICAL_MARIJUANA_DISPENSARY)
+            hr11 = weighted_options(MONEY_SERVICE_BUSINESS)
             hr12 = random.choice(NAICS.NAICS_Code)
-            hr13 = weighted_options('embassy_consulate')
-            hr14 = weighted_options('embassy_consulate')
+            hr13 = weighted_options(NONREGULATED_FINANCIAL_INSTITUTION)
+            hr14 = weighted_options(NOT_PROFIT)
             # hr15=random.choice(occupation)
-            hr16 = weighted_options('embassy_consulate')
-            hr17 = weighted_options('embassy_consulate')
-            hr18 = weighted_options('embassy_consulate')
+            hr16 = weighted_options(PRIVATE_ATM_OPERATOR)
+            hr17 = weighted_options('products')
+            hr18 = weighted_options(SALES_USED_VEHICLES)
             hr19 = weighted_options('services')
             hr20 = weighted_options('sic_code')
             hr21 = weighted_options('stock_market_listing')
-            hr22 = weighted_options('embassy_consulate')
-            hr23 = weighted_options('embassy_consulate')
+            hr22 = weighted_options(THIRD_PARTY_PAYMENT_PROCESSOR)
+            hr23 = weighted_options(TRANSACTING_PROVIDER)
 
-            refrating = ['1', '1', '1', '2', '3', '4', '2', '4', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5', '5',
-                         '5']
-            if (PEP == 'Yes' or SAR == 'Yes' or lrg_cash_ex == 'Yes' or demarket == 'Yes' or arms_manufacturer == 'Yes'
-                or auction == 'Yes' or cash_intensive_business == 'Yes' or casino_gambling == 'Yes' or hr1 == 'Yes' or hr2 == 'Yes' or hr3 == 'Yes' or hr4 == 'Yes' or
-                        hr5 == 'Yes' or hr6 == 'Yes' or hr7 == 'Yes' or hr8 == 'Yes' or hr9 == 'Yes' or hr10 == 'Yes' or hr11 == 'Yes' or hr13 == 'Yes' or hr14 == 'Yes' or
-                        hr16 == 'Yes' or hr17 == 'Yes' or hr18 == 'Yes' or hr22 == 'Yes' or hr23 == 'Yes' or high_net_worth_flag == 'Yes'):
+            if 'Yes' in (
+                    politically_exposed_person, suspicious_activity_report, lrg_cash_ex, demarket, arms_manufacturer,
+                    auction,
+                    cash_intensive_business,
+                    casino_gambling, hr1, hr2, hr3, hr4, hr5, hr6, hr7, hr8, hr9, hr10, hr11, hr13, hr14,
+                    hr16, hr17, hr18, hr22, hr23, high_net_worth_flag):
                 high_risk = 'Yes'
-                hr_rating = random.choice(refrating)
+                hr_rating = weighted_options('refrating')
 
-            if SAR == 'No' and high_risk == 'No':
-                if max((randrange(0, 101, 1) - 99), 0) == 1:
+            if suspicious_activity_report == 'No' and high_risk == 'No':
+                if risk_range():
                     high_risk = 'Yes'
-                    hr_rating = random.choice(refrating)
-            if PEP == 'No' and high_risk == 'No':
-                if max((randrange(0, 101, 1) - 99), 0) == 1:
+                    hr_rating = weighted_options('refrating')
+            if politically_exposed_person == 'No' and high_risk == 'No':
+                if risk_range():
                     high_risk = 'Yes'
-                    hr_rating = random.choice(refrating)
+                    hr_rating = weighted_options('refrating')
 
             if high_risk == 'No':
-                if max((randrange(0, 101, 1) - 99), 0) == 1:
+                if risk_range():
                     high_risk = 'Yes'
-                    hr_rating = random.choice(refrating)
+                    hr_rating = weighted_options('refrating')
 
             row.extend(
                 [hr1, hr2, hr3, hr4, hr5, hr6, hr7, hr8, hr9, hr10, hr11, hr12, hr13, hr14, hr16, hr17, hr18, hr19,
