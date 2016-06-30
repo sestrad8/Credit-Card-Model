@@ -211,7 +211,7 @@ def generate_customers():
                 if risk_range() and demarket == 'No':
                     # 10% of closed accounts have SARs
                     suspicious_activity_report = 'Yes'
-                    # 90% of closed accounts with SARs are demarketed
+                    # 90% of closed accounts  with SARs are demarketed
                     if max((randrange(0, 11, 1) - 9), 0) == 0:
                         demarket = 'Yes'
                         dem_date = gen_data.create_date(past=True)

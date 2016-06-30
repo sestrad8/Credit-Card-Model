@@ -3,3 +3,4 @@
 .inenv/
 *.pyc
 *.iml
+.DS_Store
